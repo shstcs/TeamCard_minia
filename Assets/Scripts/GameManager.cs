@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip match;
 
+    private string[] names = { "김태형", "성연호", "박준형", "이정석", "김동현" };
     private void Awake()
     {
         I = this;
@@ -34,14 +35,17 @@ public class GameManager : MonoBehaviour
             {
                 GameObject newCard = Instantiate(Card);
                 newCard.transform.parent = GameObject.Find("Cards").transform;  //card를 cards아래에 배치
+                newCard.GetComponent<Card>().Number = rtans[i * 4 + j];
 
                 float x = i * 1.4f - 2.1f;
                 float y = j * 1.4f - 3.0f;
                 newCard.transform.position = new Vector3(x, y, 0);
 
-                string rtanName = "rtan" + rtans[i*4+j].ToString();
+                int count = rtans[i * 4 + j] + 1;
+                string fileName = "Cards/";
+                fileName += "Card" + count.ToString("D2");
                 newCard.transform.Find("front").GetComponent<SpriteRenderer>().sprite 
-                = Resources.Load<Sprite>(rtanName);     //사진 이름에 맞게 붙여넣기
+                = Resources.Load<Sprite>(fileName);     //사진 이름에 맞게 붙여넣기
             }
         }
     }
@@ -69,8 +73,9 @@ public class GameManager : MonoBehaviour
 
             firstCard.GetComponent<Card>().destroyCard();   //카드 제거
             secondCard.GetComponent<Card>().destroyCard();
-        }
-        else                                //불일치하면
+            StartCoroutine(MatTextActive(firstImage == secondImage, names[firstCard.GetComponent<Card>().Number%5]));
+
+        } else                                //불일치하면
         {
             firstCard.GetComponent<Card>().closeCard();    //카드 다시 뒤집기
             secondCard.GetComponent<Card>().closeCard();
@@ -88,6 +93,8 @@ public class GameManager : MonoBehaviour
     }
     public void gameOver()  //게임오버 함수. 시간 멈추고 글자 띄우기.
     {
+        matText.gameObject.SetActive(false);
+        failImage.gameObject.SetActive(false);
         endText.gameObject.SetActive(true);
         Time.timeScale = 0;
     }
