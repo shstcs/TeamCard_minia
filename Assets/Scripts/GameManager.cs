@@ -2,25 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using System.Linq;
 using System;
 
-
 public class GameManager : MonoBehaviour
 {
-    public Text TimeText;           //타이머
-    public TMP_Text matchText;      //매칭 텍스트
+    public Text TimeText;       //타이머
     public GameObject Card;     
-    float time = 0;                 //흐른 시간
+    float time = 0;             //흐른 시간
     public static GameManager I;
-    public GameObject firstCard;    //그림 비교를 위한 카드 두장
+    public GameObject firstCard;        //그림 비교를 위한 카드 두장
     public GameObject secondCard;
     public Text endText;
     public AudioSource audioSource;
     public AudioClip match;
-
-    private string[] Teammates = { "김태형", "박준형", "이정석", "성연호", "김동현" };
 
     private void Awake()
     {
@@ -45,8 +40,6 @@ public class GameManager : MonoBehaviour
                 string rtanName = "rtan" + rtans[i*4+j].ToString();
                 newCard.transform.Find("front").GetComponent<SpriteRenderer>().sprite 
                 = Resources.Load<Sprite>(rtanName);     //사진 이름에 맞게 붙여넣기
-
-                newCard.GetComponent<Card>().Number = rtans[i * 4 + j];
             }
         }
     }
@@ -74,13 +67,11 @@ public class GameManager : MonoBehaviour
 
             firstCard.GetComponent<Card>().destroyCard();   //카드 제거
             secondCard.GetComponent<Card>().destroyCard();
-            StartCoroutine(MatText(Teammates[firstCard.GetComponent<Card>().Number%5], Color.blue));
-
-        } else                                //불일치하면
+        }
+        else                                //불일치하면
         {
             firstCard.GetComponent <Card>().closeCard();    //카드 다시 뒤집기
             secondCard.GetComponent<Card>().closeCard();
-            StartCoroutine(MatText("**실패**", Color.red));
         }
         firstCard = null;
         secondCard = null;
@@ -96,13 +87,5 @@ public class GameManager : MonoBehaviour
     {
         endText.gameObject.SetActive(true);
         Time.timeScale = 0;
-    }
-
-    private IEnumerator MatText(string text, Color color) {
-        matchText.text = text;
-        matchText.color = color;
-        matchText.gameObject.SetActive(true);
-        yield return new WaitForSeconds(0.5f);
-        matchText.gameObject.SetActive(false);
     }
 }
