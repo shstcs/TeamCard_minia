@@ -8,6 +8,8 @@ using System;
 public class GameManager : MonoBehaviour
 {
     public Text TimeText;       //타이머
+    public Text matText;        //매칭
+    public Image failImage;
     public GameObject Card;     
     float time = 0;             //흐른 시간
     public static GameManager I;
@@ -70,8 +72,9 @@ public class GameManager : MonoBehaviour
         }
         else                                //불일치하면
         {
-            firstCard.GetComponent <Card>().closeCard();    //카드 다시 뒤집기
+            firstCard.GetComponent<Card>().closeCard();    //카드 다시 뒤집기
             secondCard.GetComponent<Card>().closeCard();
+            StartCoroutine(MatTextActive(firstImage == secondImage));
         }
         firstCard = null;
         secondCard = null;
@@ -87,5 +90,18 @@ public class GameManager : MonoBehaviour
     {
         endText.gameObject.SetActive(true);
         Time.timeScale = 0;
+    }
+
+    private IEnumerator MatTextActive(bool isMat, string text ="") {
+        if (isMat) {
+            matText.text = text;
+            matText.gameObject.SetActive(true);
+        } else {
+            failImage.gameObject.SetActive(true);
+        }
+        
+        yield return new WaitForSeconds(0.5f);
+        matText.gameObject.SetActive(false);
+        failImage.gameObject.SetActive(false);
     }
 }
