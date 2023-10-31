@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,26 +27,29 @@ public class Card : MonoBehaviour
 
     public void openCard()
     {
+        if (GameManager.I.firstCard != null &&
+            GameManager.I.secondCard != null)
+            return;
+
+        StartCoroutine(CoRoteateFace(true));
         audioSource.PlayOneShot(flip);
-        if (GameManager.I.firstCard == null)
-        {
+
+        if (GameManager.I.firstCard == null) {
             GameManager.I.firstCard = gameObject;
-        }
-        else
-        {
+        } else if (GameManager.I.secondCard == null) {
             GameManager.I.secondCard = gameObject;
-            GameManager.I.isMatched();
+            StartCoroutine(CoWaitAction(GameManager.I.isMatched));
         }
-        
-        transform.Find("front").gameObject.SetActive(true);
-        transform.Find("back").gameObject.SetActive(false);
+
         if (!isFlipped)
         {
             // 카드가 한 번 이상 뒤집힌 경우에만 색상 변경
             isFlipped = true;
             ChangeCardColor(Color.gray);
         }
-        cardAnim.SetBool("isOpen", true);
+        //transform.Find("front").gameObject.SetActive(true);
+        //transform.Find("back").gameObject.SetActive(false);
+        //cardAnim.SetBool("isOpen", true);
     }
     public void destroyCard()
     {
@@ -59,7 +63,8 @@ public class Card : MonoBehaviour
 
     public void closeCard()
     {
-        Invoke("closeCardInvoke", 0.5f);
+        StartCoroutine(CoRoteateFace(false));
+        //Invoke("closeCardInvoke", 0.5f);
     }
 
     void closeCardInvoke()
@@ -74,5 +79,31 @@ public class Card : MonoBehaviour
         SpriteRenderer backSprite = transform.Find("back").GetComponent<SpriteRenderer>();
         backSprite.color = newColor;
 
+    }
+
+    private IEnumerator CoRoteateFace(bool faceUp) {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.01f);
+        for (float i = 0.0f; i <= 90.0f; i += 10.0f) {
+            transform.rotation = Quaternion.Euler(0.0f, i, 0.0f);
+            yield return waitForSeconds;
+        }
+
+        if (faceUp) {
+            transform.Find("front").gameObject.SetActive(true);
+            transform.Find("back").gameObject.SetActive(false);
+        } else {
+            transform.Find("back").gameObject.SetActive(true);
+            transform.Find("front").gameObject.SetActive(false);
+        }
+
+        for (float i = 90.0f; i >= 0.0f; i -= 10.0f) {
+            transform.rotation = Quaternion.Euler(0.0f, i, 0.0f);
+            yield return waitForSeconds;
+        }
+    }
+
+    private IEnumerator CoWaitAction(Action action) {
+        yield return new WaitForSeconds(0.5f);
+        action();
     }
 }
