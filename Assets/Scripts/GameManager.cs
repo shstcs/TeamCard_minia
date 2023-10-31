@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     public AudioClip wrong;
     int matchTimes = 0;
 
-    private string[] names = { "??????", "??????", "??????", "??????", "??????" };
+    private string[] names = { "김태형", "성연호", "박준형", "이정석", "김동현" };
     private void Awake()
     {
         I = this;
@@ -105,7 +105,7 @@ public class GameManager : MonoBehaviour
     {
         matText.gameObject.SetActive(false);
         failImage.gameObject.SetActive(false);
-        scoreText.text = "???? ???? : " + matchTimes + "??";
+        scoreText.text = "매칭 횟수 : " + matchTimes + "회";
         endpanel.SetActive(true);
         Time.timeScale = 0;
     }
