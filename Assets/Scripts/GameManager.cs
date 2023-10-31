@@ -96,6 +96,13 @@ public class GameManager : MonoBehaviour
             firstCard.GetComponent<Card>().closeCard();    //???? ???? ??????
             secondCard.GetComponent<Card>().closeCard();
             StartCoroutine(MatTextActive(firstImage == secondImage));
+
+            
+            time += 2.0f;       //카드 불일치시 시간 2초씩 추가 
+              if (time > 30f)   //30초를 넘지 않도록 설정
+            {
+                time = 30f;
+             }
         }
         firstCard = null;
         secondCard = null;
@@ -128,4 +135,6 @@ public class GameManager : MonoBehaviour
         matText.gameObject.SetActive(false);
         failImage.gameObject.SetActive(false);
     }
+
+    
 }
