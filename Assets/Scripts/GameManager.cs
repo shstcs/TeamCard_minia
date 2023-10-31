@@ -74,11 +74,8 @@ public class GameManager : MonoBehaviour
 
         if (firstImage != secondImage)
         {
-
             audioSource.PlayOneShot(wrong);
-
         }
-
 
         if (firstImage == secondImage)      //????????
         {

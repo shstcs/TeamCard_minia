@@ -1235,6 +1235,7 @@ MonoBehaviour:
   scoreText: {fileID: 455743919}
   audioSource: {fileID: 2013518468}
   match: {fileID: 8300000, guid: 9621b7eec08da8e46928bf80b57807c4, type: 3}
+  wrong: {fileID: 8300000, guid: 7884a84146e3540a090ebcabbfc67b94, type: 3}
 --- !u!4 &2013518467
 Transform:
   m_ObjectHideFlags: 0
