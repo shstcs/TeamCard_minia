@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using System;
+using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviour
 {
@@ -60,6 +61,11 @@ public class GameManager : MonoBehaviour
         if(time > 30.0f)        //30초 후 게임오버
         {
             gameOver();
+        }
+        if(time > 15.0f)    //15초 후 타이머 색깔 변경
+        {
+            TimeText.text = "<color=red>" + (string)TimeText.text + "</color>";
+           
         }
 
     }
