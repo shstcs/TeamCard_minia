@@ -7,10 +7,13 @@ public class Card : MonoBehaviour
     public Animator cardAnim;
     public AudioClip flip;
     public AudioSource audioSource;
+
+    public int Number;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -31,7 +34,7 @@ public class Card : MonoBehaviour
             GameManager.I.secondCard = gameObject;
             GameManager.I.isMatched();
         }
-
+        
         transform.Find("front").gameObject.SetActive(true);
         transform.Find("back").gameObject.SetActive(false);
         cardAnim.SetBool("isOpen", true);
