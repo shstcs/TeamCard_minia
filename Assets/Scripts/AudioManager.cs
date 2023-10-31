@@ -10,6 +10,7 @@ public class AudioManager : MonoBehaviour
     void Start()
     {
         audioSource.clip = bgmusic;
+        audioSource.volume = 0.5f;  //±Í¾ÆÇÄ;;
         audioSource.Play();
     }
 
