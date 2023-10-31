@@ -7,21 +7,22 @@ using System;
 
 public class GameManager : MonoBehaviour
 {
-    public Text TimeText;       //타이머
-    public Text matText;        //매칭
+    public Text TimeText;       //??????
+    public Text matText;        //????
     public Image failImage;
     public GameObject Card;     
-    float time = 0;             //흐른 시간
+    float time = 0;             //???? ????
     public static GameManager I;
-    public GameObject firstCard;        //그림 비교를 위한 카드 두장
+    public GameObject firstCard;        //???? ?????? ???? ???? ????
     public GameObject secondCard;
     public GameObject endpanel;
     public Text scoreText;
     public AudioSource audioSource;
     public AudioClip match;
+    public AudioClip wrong;
     int matchTimes = 0;
 
-    private string[] names = { "김태형", "성연호", "박준형", "이정석", "김동현" };
+    private string[] names = { "??????", "??????", "??????", "??????", "??????" };
     private void Awake()
     {
         I = this;
@@ -30,13 +31,13 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1.0f;
         int[] rtans = {0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7};    
-        rtans = rtans.OrderBy(item => Guid.NewGuid()).ToArray();    //랜덤으로 정렬
-        for (int i = 0; i < 4; i++)         //4x4로 카드를 배치하는 반복문
+        rtans = rtans.OrderBy(item => Guid.NewGuid()).ToArray();    //???????? ????
+        for (int i = 0; i < 4; i++)         //4x4?? ?????? ???????? ??????
         {
             for(int j = 0; j < 4; j++)
             {
                 GameObject newCard = Instantiate(Card);
-                newCard.transform.parent = GameObject.Find("Cards").transform;  //card를 cards아래에 배치
+                newCard.transform.parent = GameObject.Find("Cards").transform;  //card?? cards?????? ????
                 newCard.GetComponent<Card>().Number = rtans[i * 4 + j];
 
                 float x = i * 1.4f - 2.1f;
@@ -47,7 +48,7 @@ public class GameManager : MonoBehaviour
                 string fileName = "Cards/";
                 fileName += "Card" + count.ToString("D2");
                 newCard.transform.Find("front").GetComponent<SpriteRenderer>().sprite 
-                = Resources.Load<Sprite>(fileName);     //사진 이름에 맞게 붙여넣기
+                = Resources.Load<Sprite>(fileName);     //???? ?????? ???? ????????
             }
         }
     }
@@ -57,48 +58,57 @@ public class GameManager : MonoBehaviour
     {
         time += Time.deltaTime;
         TimeText.text = time.ToString("N2");
-        if(time > 30.0f)        //30초 후 게임오버
+        if(time > 30.0f)        //30?? ?? ????????
         {
             gameOver();
         }
 
     }
 
-    public void isMatched()     //카드 그림 일치하는지 확인하는 함수
+    public void isMatched()     //???? ???? ?????????? ???????? ????
     {
         matchTimes++;
-        //카드 오브젝트에서 그림 이미지 이름만 빼와서 저장.
+        //???? ???????????? ???? ?????? ?????? ?????? ????.
         string firstImage = firstCard.transform.Find("front").GetComponent<SpriteRenderer>().sprite.name; 
         string secondImage = secondCard.transform.Find("front").GetComponent<SpriteRenderer>().sprite.name;
-        if (firstImage == secondImage)      //일치하면
+
+        if (firstImage != secondImage)
+        {
+
+            audioSource.PlayOneShot(wrong);
+
+        }
+
+
+        if (firstImage == secondImage)      //????????
         {
             audioSource.PlayOneShot(match);
 
-            firstCard.GetComponent<Card>().destroyCard();   //카드 제거
+            firstCard.GetComponent<Card>().destroyCard();   //???? ????
             secondCard.GetComponent<Card>().destroyCard();
             StartCoroutine(MatTextActive(firstImage == secondImage, names[firstCard.GetComponent<Card>().Number%5]));
 
-        } else                                //불일치하면
+        } else                                //??????????
         {
-            firstCard.GetComponent<Card>().closeCard();    //카드 다시 뒤집기
+            firstCard.GetComponent<Card>().closeCard();    //???? ???? ??????
             secondCard.GetComponent<Card>().closeCard();
             StartCoroutine(MatTextActive(firstImage == secondImage));
         }
         firstCard = null;
         secondCard = null;
 
-        //Cards의 자식 수 확인
+        //Cards?? ???? ?? ????
         int cardsLeft = GameObject.Find("Cards").transform.childCount;
-        if (cardsLeft <= 2)     //카드 다 사라지면 게임오버. 현재 보는것까지 해서 2가 최소.
+        if (cardsLeft <= 2)     //???? ?? ???????? ????????. ???? ?????????? ???? 2?? ????.
         {
             gameOver();
         }
     }
-    public void gameOver()  //게임오버 함수. 시간 멈추고 글자 띄우기.
+    public void gameOver()  //???????? ????. ???? ?????? ???? ??????.
     {
         matText.gameObject.SetActive(false);
         failImage.gameObject.SetActive(false);
-        scoreText.text = "매칭 횟수 : " + matchTimes + "회";
+        scoreText.text = "???? ???? : " + matchTimes + "??";
         endpanel.SetActive(true);
         Time.timeScale = 0;
     }
