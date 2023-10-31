@@ -15,9 +15,11 @@ public class GameManager : MonoBehaviour
     public static GameManager I;
     public GameObject firstCard;        //그림 비교를 위한 카드 두장
     public GameObject secondCard;
-    public Text endText;
+    public GameObject endpanel;
+    public Text scoreText;
     public AudioSource audioSource;
     public AudioClip match;
+    int matchTimes = 0;
 
     private string[] names = { "김태형", "성연호", "박준형", "이정석", "김동현" };
     private void Awake()
@@ -64,6 +66,7 @@ public class GameManager : MonoBehaviour
 
     public void isMatched()     //카드 그림 일치하는지 확인하는 함수
     {
+        matchTimes++;
         //카드 오브젝트에서 그림 이미지 이름만 빼와서 저장.
         string firstImage = firstCard.transform.Find("front").GetComponent<SpriteRenderer>().sprite.name; 
         string secondImage = secondCard.transform.Find("front").GetComponent<SpriteRenderer>().sprite.name;
@@ -95,7 +98,8 @@ public class GameManager : MonoBehaviour
     {
         matText.gameObject.SetActive(false);
         failImage.gameObject.SetActive(false);
-        endText.gameObject.SetActive(true);
+        scoreText.text = "매칭 횟수 : " + matchTimes + "회";
+        endpanel.SetActive(true);
         Time.timeScale = 0;
     }
 
