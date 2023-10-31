@@ -19,6 +19,13 @@ public class startBtn : MonoBehaviour
 
     public void startB()
     {
+        PlayerPrefs.SetInt("mode", 0);
+        SceneManager.LoadScene("MainScene");
+    }
+
+    public void startHardB()
+    {
+        PlayerPrefs.SetInt("mode", 1);
         SceneManager.LoadScene("MainScene");
     }
 }
