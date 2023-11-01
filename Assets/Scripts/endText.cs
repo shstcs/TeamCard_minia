@@ -17,8 +17,15 @@ public class endText : MonoBehaviour
         
     }
 
-    public void retryGame()
+    public void retryEasy()
     {
+        PlayerPrefs.SetInt("mode", 0);
+        SceneManager.LoadScene("MainScene");
+    }
+
+    public void retryHard()
+    {
+        PlayerPrefs.SetInt("mode", 1);
         SceneManager.LoadScene("MainScene");
     }
 }
