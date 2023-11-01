@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour
     public AudioClip match;
     public AudioClip wrong;
     int matchTimes = 0;
+    int maxAttempts = 10;      // 10번까지는 점수에 영향을 미치지 않음
+    int penaltyPerAttempt = 1; // 11번 이상부터 시도 횟수당 -1점
 
 
     private string[] names = { "김태형", "성연호", "박준형", "이정석", "김동현" };
@@ -150,9 +152,44 @@ public class GameManager : MonoBehaviour
     {
         matText.gameObject.SetActive(false);
         failImage.gameObject.SetActive(false);
-        scoreText.text = "매칭 횟수 : " + matchTimes + "회";
+        
+        // 남은 시간 계산
+        float remainingTime = Mathf.Max(0, 30.0f - time);
+
+        // 시도 횟수에 따른 점수 계산
+        int attemptsScore = 0;
+        if (matchTimes > maxAttempts)
+        {
+            attemptsScore = (matchTimes - maxAttempts) * (-penaltyPerAttempt);
+        }
+
+        // 남은 시간 보너스 내림하여 정수로 계산
+        int timeBonus = Mathf.FloorToInt(remainingTime * 10);
+
+        // 전체 점수 계산
+        int totalScore = timeBonus + attemptsScore;
+
+        // 점수를 scoreText에 표시
+        scoreText.text = "매칭 횟수: " + matchTimes + "회\n" +
+                         "남은 시간 보너스: " + timeBonus + "점\n" +
+                         "<color=red>시도 횟수 패널티: " + attemptsScore + "점</color>\n" +
+                         "<size=100>총 점수: " + totalScore + "점</size>";
         endpanel.SetActive(true);
         Time.timeScale = 0;
+    }
+    private int CalculateScore()
+    {
+        // 남은 시간에 따른 점수 계산
+        float remainingTime = 30.0f - time;
+        int timeScore = Mathf.RoundToInt(remainingTime * 10); // 1초당 +10점
+
+        // 매칭 시도 횟수에 따른 점수 계산
+        int attemptsScore = Mathf.Max(0, matchTimes - maxAttempts) * (-penaltyPerAttempt);
+
+        // 전체 점수 계산
+        int totalScore = timeScore + attemptsScore;
+
+        return totalScore;
     }
 
     private IEnumerator MatTextActive(bool isMat, string text ="") {
