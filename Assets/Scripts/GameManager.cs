@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     public Text matText;        //    
     public Image failImage;
     public GameObject Card;     
-    float time = 0;             //         
+    float time = 60f;             // 제한시간 60초 설정     
     public static GameManager I;
     public GameObject firstCard;        //                          
     public GameObject secondCard;
@@ -62,7 +62,8 @@ public class GameManager : MonoBehaviour
 
         else if (PlayerPrefs.GetInt("mode") == 1)
         {
-            GameObject.Find("Main Camera").GetComponent<Camera>().backgroundColor = Color.red;
+            time -= 20f;
+            GameObject.Find("Main Camera").GetComponent<Camera>().backgroundColor = Color.black;
             int[] members = { 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 14};
             members = members.OrderBy(item => Guid.NewGuid()).ToArray();
             for (int i = 0; i <5; i++)
@@ -91,13 +92,13 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        time += Time.deltaTime;
+        time -= Time.deltaTime;
         TimeText.text = time.ToString("N2");
-        if(time > 30.0f)                 
+        if(time < 0f)                 
         {
             gameOver();
         }
-        if(time > 15.0f)    //15초 후 타이머 색깔 변경
+        if(time < 15.0f)    //15초 남았을 때 타이머 색깔 변경
         {
             TimeText.text = "<color=red>" + (string)TimeText.text + "</color>";
            
@@ -115,6 +116,12 @@ public class GameManager : MonoBehaviour
         if (firstImage != secondImage)
         {
             audioSource.PlayOneShot(wrong);
+
+            time -= 2.0f;       //카드 불일치시 시간 2초씩 감소
+            if (time < 0f)   //시간이 음수로 가지 않게 설정
+            {
+                time = 0f;
+            }
         }
 
         if (firstImage == secondImage)            
@@ -124,6 +131,8 @@ public class GameManager : MonoBehaviour
             firstCard.GetComponent<Card>().destroyCard();        
             secondCard.GetComponent<Card>().destroyCard();
             StartCoroutine(MatTextActive(firstImage == secondImage, names[firstCard.GetComponent<Card>().Number%5]));
+            time += 3.0f;       //카드 일치시 시간 3초씩 증가
+           
 
         } else                                      
         {
@@ -131,12 +140,7 @@ public class GameManager : MonoBehaviour
             secondCard.GetComponent<Card>().closeCard();
             StartCoroutine(MatTextActive(firstImage == secondImage));
 
-            
-            time += 2.0f;       //카드 불일치시 시간 2초씩 추가 
-              if (time > 30f)   //30초를 넘지 않도록 설정
-            {
-                time = 30f;
-             }
+         
         }
         firstCard = null;
         secondCard = null;
@@ -154,7 +158,7 @@ public class GameManager : MonoBehaviour
         failImage.gameObject.SetActive(false);
         
         // 남은 시간 계산
-        float remainingTime = Mathf.Max(0, 30.0f - time);
+        float remainingTime = Mathf.Max(0, time);
 
         // 시도 횟수에 따른 점수 계산
         int attemptsScore = 0;
@@ -180,7 +184,7 @@ public class GameManager : MonoBehaviour
     private int CalculateScore()
     {
         // 남은 시간에 따른 점수 계산
-        float remainingTime = 30.0f - time;
+        float remainingTime = time;
         int timeScore = Mathf.RoundToInt(remainingTime * 10); // 1초당 +10점
 
         // 매칭 시도 횟수에 따른 점수 계산
