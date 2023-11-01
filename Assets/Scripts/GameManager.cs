@@ -104,7 +104,6 @@ public class GameManager : MonoBehaviour
             time -= Time.deltaTime;
             TimeText.text = time.ToString("N2");
         }
-
         if (time < 0f)                 
         {
             gameOver();
@@ -114,7 +113,6 @@ public class GameManager : MonoBehaviour
             TimeText.text = "<color=red>" + (string)TimeText.text + "</color>";
            
         }
-
     }
 
     public void isMatched()                                    
