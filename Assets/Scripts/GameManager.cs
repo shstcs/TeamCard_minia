@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     public AudioClip wrong;
     int matchTimes = 0;
     int maxAttempts = 10;      // 10번까지는 점수에 영향을 미치지 않음
-    int penaltyPerAttempt = 1; // 11번 이상부터 시도 횟수당 -1점
+    int penaltyPerAttempt = 10; // 11번 이상부터 시도 횟수당 -10점
 
     public bool IsGameStart { get; private set; }
     private List<GameObject> cards;
@@ -178,7 +178,7 @@ public class GameManager : MonoBehaviour
         }
 
         // 남은 시간 보너스 내림하여 정수로 계산
-        int timeBonus = Mathf.FloorToInt(remainingTime * 10);
+        int timeBonus = Mathf.FloorToInt(remainingTime * 5);
 
         // 전체 점수 계산
         int totalScore = timeBonus + attemptsScore;
@@ -195,7 +195,7 @@ public class GameManager : MonoBehaviour
     {
         // 남은 시간에 따른 점수 계산
         float remainingTime = time;
-        int timeScore = Mathf.RoundToInt(remainingTime * 10); // 1초당 +10점
+        int timeScore = Mathf.RoundToInt(remainingTime * 5); // 1초당 +5점
 
         // 매칭 시도 횟수에 따른 점수 계산
         int attemptsScore = Mathf.Max(0, matchTimes - maxAttempts) * (-penaltyPerAttempt);
