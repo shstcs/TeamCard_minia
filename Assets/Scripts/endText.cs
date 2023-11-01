@@ -28,4 +28,9 @@ public class endText : MonoBehaviour
         PlayerPrefs.SetInt("mode", 1);
         SceneManager.LoadScene("MainScene");
     }
+
+    public void returnStart() 
+    {
+        SceneManager.LoadScene("StartScene");
+    }
 }
