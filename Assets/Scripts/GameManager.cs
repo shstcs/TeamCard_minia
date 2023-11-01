@@ -94,7 +94,6 @@ public class GameManager : MonoBehaviour
         }
 
         StartCoroutine(StartCardRotate());
-        //StartCoroutine(StartCardRotate2());
     }
 
     // Update is called once per frame
@@ -219,16 +218,6 @@ public class GameManager : MonoBehaviour
     }
 
     private IEnumerator StartCardRotate() {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(0.4f);
-        for (int i = 0; i < cards.Count; ++i) {
-            yield return StartCoroutine(cards[i].GetComponent<Card>().CoRoteateFace(true));
-            cards[i].GetComponent<Card>().RotateCard(false);
-        }
-
-        IsGameStart = true;
-    }
-
-    private IEnumerator StartCardRotate2() {
         for (int i = 0; i < cards.Count; ++i) {
             cards[i].GetComponent<Card>().RotateCard(true);
         }
