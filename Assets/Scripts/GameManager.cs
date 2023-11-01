@@ -26,7 +26,8 @@ public class GameManager : MonoBehaviour
     int maxAttempts = 10;      // 10번까지는 점수에 영향을 미치지 않음
     int penaltyPerAttempt = 1; // 11번 이상부터 시도 횟수당 -1점
 
-
+    public bool IsGameStart { get; private set; }
+    private List<GameObject> cards;
     private string[] names = { "김태형", "성연호", "박준형", "이정석", "김동현" };
     private void Awake()
     {
@@ -35,6 +36,9 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Time.timeScale = 1.0f;
+        IsGameStart = false;
+        cards = new List<GameObject>();
+
         if (PlayerPrefs.GetInt("mode") == 0)
         {
             int[] rtans = { 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7 };
@@ -56,6 +60,7 @@ public class GameManager : MonoBehaviour
                     fileName += "Card" + count.ToString("D2");
                     newCard.transform.Find("front").GetComponent<SpriteRenderer>().sprite
                     = Resources.Load<Sprite>(fileName);
+                    cards.Add(newCard);
                 }
             }
         }
@@ -83,17 +88,24 @@ public class GameManager : MonoBehaviour
                     fileName += "Card" + count.ToString("D2");
                     newCard.transform.Find("front").GetComponent<SpriteRenderer>().sprite
                     = Resources.Load<Sprite>(fileName);
+                    cards.Add(newCard);
                 }
             }
         }
+
+        StartCoroutine(StartCardRotate());
+        //StartCoroutine(StartCardRotate2());
     }
 
     // Update is called once per frame
     void Update()
     {
-        time += Time.deltaTime;
-        TimeText.text = time.ToString("N2");
-        if(time > 30.0f)                 
+        if (IsGameStart) {
+            time += Time.deltaTime;
+            TimeText.text = time.ToString("N2");
+        }
+
+        if (time > 30.0f)                 
         {
             gameOver();
         }
@@ -148,6 +160,7 @@ public class GameManager : MonoBehaviour
             gameOver();
         }
     }
+
     public void gameOver()  
     {
         matText.gameObject.SetActive(false);
@@ -205,5 +218,27 @@ public class GameManager : MonoBehaviour
         failImage.gameObject.SetActive(false);
     }
 
-   
+    private IEnumerator StartCardRotate() {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.4f);
+        for (int i = 0; i < cards.Count; ++i) {
+            yield return StartCoroutine(cards[i].GetComponent<Card>().CoRoteateFace(true));
+            cards[i].GetComponent<Card>().RotateCard(false);
+        }
+
+        IsGameStart = true;
+    }
+
+    private IEnumerator StartCardRotate2() {
+        for (int i = 0; i < cards.Count; ++i) {
+            cards[i].GetComponent<Card>().RotateCard(true);
+        }
+
+        yield return new WaitForSeconds(3.0f);
+
+        for (int i = 0; i < cards.Count; ++i) {
+            cards[i].GetComponent<Card>().RotateCard(false);
+        }
+
+        IsGameStart = true;
+    }
 }

@@ -27,12 +27,12 @@ public class Card : MonoBehaviour
 
     public void openCard()
     {
-        if (GameManager.I.firstCard != null &&
-            GameManager.I.secondCard != null)
+        if ((GameManager.I.firstCard != null &&
+            GameManager.I.secondCard != null) ||
+            !GameManager.I.IsGameStart)
             return;
 
         StartCoroutine(CoRoteateFace(true));
-        audioSource.PlayOneShot(flip);
 
         if (GameManager.I.firstCard == null) {
             GameManager.I.firstCard = gameObject;
@@ -81,8 +81,14 @@ public class Card : MonoBehaviour
 
     }
 
-    private IEnumerator CoRoteateFace(bool faceUp) {
+    public void RotateCard(bool faceUp) {
+        StartCoroutine(CoRoteateFace(faceUp));
+    }
+
+    public IEnumerator CoRoteateFace(bool faceUp) {
         WaitForSeconds waitForSeconds = new WaitForSeconds(0.01f);
+        audioSource.PlayOneShot(flip);
+
         for (float i = 0.0f; i <= 90.0f; i += 10.0f) {
             transform.rotation = Quaternion.Euler(0.0f, i, 0.0f);
             yield return waitForSeconds;
