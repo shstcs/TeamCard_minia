@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour
 
         else if (PlayerPrefs.GetInt("mode") == 1)
         {
-            GameObject.Find("Main Camera").GetComponent<Camera>().backgroundColor = Color.red;
+            GameObject.Find("Main Camera").GetComponent<Camera>().backgroundColor = new Color(25f/255f, 25f / 255f, 60f / 255f);
             int[] members = { 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 14};
             members = members.OrderBy(item => Guid.NewGuid()).ToArray();
             for (int i = 0; i <5; i++)
@@ -73,8 +73,8 @@ public class GameManager : MonoBehaviour
                     newCard.transform.parent = GameObject.Find("Cards").transform;
                     newCard.GetComponent<Card>().Number = members[i * 6 + j];
 
-                    float x = i * 1.0f - 2.1f;
-                    float y = j * 1.0f - 3.0f;
+                    float x = i * 1.05f - 2.1f;
+                    float y = j * 1.2f - 4.0f;
                     newCard.transform.position = new Vector3(x, y, 0);
                     newCard.transform.localScale = new Vector3(0.8f, 0.8f, 1);
 
