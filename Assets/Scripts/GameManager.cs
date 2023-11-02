@@ -187,7 +187,7 @@ public class GameManager : MonoBehaviour
         scoreText.text = "매칭 횟수: " + matchTimes + "회\n" +
                          "남은 시간 보너스: " + timeBonus + "점\n" +
                          "<color=red>시도 횟수 패널티: " + attemptsScore + "점</color>\n" +
-                         "<size=100>총 점수: " + totalScore + "점</size>";
+                         "<size=90>총 점수: " + totalScore + "점</size>";
 
         if (!PlayerPrefs.HasKey("maxScore") || PlayerPrefs.GetInt("maxScore") < totalScore)
         {
