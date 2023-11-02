@@ -29,6 +29,10 @@ public class endText : MonoBehaviour
         SceneManager.LoadScene("MainScene");
     }
 
+    public void retry() {
+        SceneManager.LoadScene("MainScene");
+    }
+
     public void returnStart() 
     {
         SceneManager.LoadScene("StartScene");

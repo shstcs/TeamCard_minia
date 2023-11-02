@@ -68,7 +68,7 @@ public class GameManager : MonoBehaviour
         else if (PlayerPrefs.GetInt("mode") == 1)
         {
             time -= 20f;
-            GameObject.Find("Main Camera").GetComponent<Camera>().backgroundColor = Color.black;
+            //GameObject.Find("Main Camera").GetComponent<Camera>().backgroundColor = Color.black;
             int[] members = { 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 14};
             members = members.OrderBy(item => Guid.NewGuid()).ToArray();
             for (int i = 0; i <5; i++)
@@ -183,19 +183,21 @@ public class GameManager : MonoBehaviour
         // 전체 점수 계산
         int totalScore = timeBonus + attemptsScore;
 
-        // 점수를 scoreText에 표시
-        scoreText.text = "매칭 횟수: " + matchTimes + "회\n" +
-                         "남은 시간 보너스: " + timeBonus + "점\n" +
-                         "<color=red>시도 횟수 패널티: " + attemptsScore + "점</color>\n" +
-                         "<size=90>총 점수: " + totalScore + "점</size>";
+        //// 점수를 scoreText에 표시
+        //scoreText.text = "매칭 횟수: " + matchTimes + "회\n" +
+        //                 "남은 시간 보너스: " + timeBonus + "점\n" +
+        //                 "<color=red>시도 횟수 패널티: " + attemptsScore + "점</color>\n" +
+        //                 "<size=90>총 점수: " + totalScore + "점</size>";
 
+        int maxScore = 0;
         if (PlayerPrefs.GetInt("mode") == 0)
         {
             if (!PlayerPrefs.HasKey("maxScoreEasy") || PlayerPrefs.GetInt("maxScoreEasy") < totalScore)
             {
                 PlayerPrefs.SetInt("maxScoreEasy", totalScore);
             }
-            endpanel.GetComponentsInChildren<Text>()[0].text = "최고 점수 : " + PlayerPrefs.GetInt("maxScoreEasy").ToString() + "점";
+            maxScore = PlayerPrefs.GetInt("maxScoreEasy");
+            //endpanel.GetComponentsInChildren<Text>()[0].text = "최고 점수 : " + PlayerPrefs.GetInt("maxScoreEasy").ToString() + "점";
         }
         else if (PlayerPrefs.GetInt("mode") == 1)
         {
@@ -203,12 +205,13 @@ public class GameManager : MonoBehaviour
             {
                 PlayerPrefs.SetInt("maxScoreHard", totalScore);
             }
-            endpanel.GetComponentsInChildren<Text>()[0].text = "최고 점수 : " + PlayerPrefs.GetInt("maxScoreHard").ToString() + "점";
+            maxScore = PlayerPrefs.GetInt("maxScoreHard");
+            //endpanel.GetComponentsInChildren<Text>()[0].text = "최고 점수 : " + PlayerPrefs.GetInt("maxScoreHard").ToString() + "점";
         }
 
-        
-
+        UIContainer.I.SetValue(matchTimes, timeBonus, attemptsScore, totalScore, maxScore);
         endpanel.SetActive(true);
+
         Time.timeScale = 0;
     }
     /*private int CalculateScore()
@@ -250,6 +253,7 @@ public class GameManager : MonoBehaviour
             cards[i].GetComponent<Card>().RotateCard(false);
         }
 
+        cards.Clear();
         IsGameStart = true;
     }
 }

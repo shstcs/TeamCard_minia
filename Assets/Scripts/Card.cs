@@ -36,7 +36,8 @@ public class Card : MonoBehaviour
 
         if (GameManager.I.firstCard == null) {
             GameManager.I.firstCard = gameObject;
-        } else if (GameManager.I.secondCard == null) {
+        } else if (GameManager.I.secondCard == null && 
+            GameManager.I.firstCard != gameObject) {
             GameManager.I.secondCard = gameObject;
             StartCoroutine(CoWaitAction(GameManager.I.isMatched));
         }
