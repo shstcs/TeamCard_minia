@@ -189,17 +189,29 @@ public class GameManager : MonoBehaviour
                          "<color=red>시도 횟수 패널티: " + attemptsScore + "점</color>\n" +
                          "<size=90>총 점수: " + totalScore + "점</size>";
 
-        if (!PlayerPrefs.HasKey("maxScore") || PlayerPrefs.GetInt("maxScore") < totalScore)
+        if (PlayerPrefs.GetInt("mode") == 0)
         {
-            PlayerPrefs.SetInt("maxScore", totalScore);
+            if (!PlayerPrefs.HasKey("maxScoreEasy") || PlayerPrefs.GetInt("maxScoreEasy") < totalScore)
+            {
+                PlayerPrefs.SetInt("maxScoreEasy", totalScore);
+            }
+            endpanel.GetComponentsInChildren<Text>()[0].text = "최고 점수 : " + PlayerPrefs.GetInt("maxScoreEasy").ToString() + "점";
+        }
+        else if (PlayerPrefs.GetInt("mode") == 1)
+        {
+            if (!PlayerPrefs.HasKey("maxScoreHard") || PlayerPrefs.GetInt("maxScoreHard") < totalScore)
+            {
+                PlayerPrefs.SetInt("maxScoreHard", totalScore);
+            }
+            endpanel.GetComponentsInChildren<Text>()[0].text = "최고 점수 : " + PlayerPrefs.GetInt("maxScoreHard").ToString() + "점";
         }
 
-        endpanel.GetComponentsInChildren<Text>()[0].text = "최고 점수 : " + PlayerPrefs.GetInt("maxScore").ToString() + "점";
+        
 
         endpanel.SetActive(true);
         Time.timeScale = 0;
     }
-    private int CalculateScore()
+    /*private int CalculateScore()
     {
         // 남은 시간에 따른 점수 계산
         float remainingTime = time;
@@ -212,7 +224,7 @@ public class GameManager : MonoBehaviour
         int totalScore = timeScore + attemptsScore;
 
         return totalScore;
-    }
+    }*/
 
     private IEnumerator MatTextActive(bool isMat, string text ="") {
         if (isMat) {
